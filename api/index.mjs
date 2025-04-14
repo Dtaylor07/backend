@@ -20,32 +20,38 @@ app.get('/github/callback', async (req, res) => {
 
   if (!code) return res.status(400).send('Missing code in callback');
 
+  console.log(`Received code: ${code}`); // Debugging code
+
   try {
-    // GitHub expects the data to be URL-encoded, not JSON
+    // Format the data correctly for GitHub OAuth
     const body = qs.stringify({
       client_id: process.env.CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
       code,
     });
 
+    // Send request to GitHub to exchange the code for an access token
     const response = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded', // GitHub expects this content type
+        Accept: 'application/json', // Expecting JSON response
+        'Content-Type': 'application/x-www-form-urlencoded', // Required by GitHub for POST body
       },
       body: body,
     });
 
     const data = await response.json();
 
+    console.log('GitHub Response:', data); // Debugging response
+
     if (data.error) {
-      return res.status(400).json(data);
+      return res.status(400).json({ error: 'Error fetching access token', details: data });
     }
 
-    res.json({
+    // Return the access token if successful
+    return res.json({
       message: 'User access token retrieved successfully!',
-      access_token: data.access_token,
+      access_token: data.access_token, // Should show the GitHub token like "ghu_usoiuosdjlsdos7ds"
       expires_in: data.expires_in,
       refresh_token: data.refresh_token,
     });
