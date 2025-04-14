@@ -1,12 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import fetch from 'node-fetch';
-import { createServer } from 'http';
-import { parse } from 'url';
+import fetch from 'node-fetch'; // `npm install node-fetch`
 
 dotenv.config();
 
 const app = express();
+
+const PORT = process.env.PORT || 3000;
 
 app.get('/login', (req, res) => {
   const clientId = process.env.CLIENT_ID;
@@ -19,8 +19,7 @@ app.get('/login', (req, res) => {
 
 app.get('/github/callback', async (req, res) => {
   const code = req.query.code;
-
-  if (!code) return res.status(400).send('Missing code in callback');
+  if (!code) return res.status(400).send('Missing code');
 
   try {
     const response = await fetch('https://github.com/login/oauth/access_token', {
@@ -37,23 +36,17 @@ app.get('/github/callback', async (req, res) => {
     });
 
     const data = await response.json();
-
     if (data.error) return res.status(400).json(data);
 
     res.json({
-      message: 'User access token retrieved successfully!',
+      message: 'Access token retrieved!',
       access_token: data.access_token,
-      expires_in: data.expires_in,
-      refresh_token: data.refresh_token,
     });
   } catch (err) {
-    console.error('Error during GitHub callback:', err);
+    console.error(err);
     res.status(500).send('Server error');
   }
 });
 
-// Export as serverless function
-export default function handler(req, res) {
-  const parsedUrl = parse(req.url, true);
-  app.handle(req, res, parsedUrl);
-}
+// ✅ THIS is how to make Express work with Vercel serverless:
+export default app;
