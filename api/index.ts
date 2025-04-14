@@ -1,5 +1,5 @@
-const express = require("express");
-const app = express();
+// const express = require("express");
+// const app = express();
 
 // app.get("/", (req, res) => res.send("Express on Vercel"));
 
@@ -16,17 +16,17 @@ const app = express();
 // dotenv.config();
 
 // const app = express();
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
 // Route to start GitHub OAuth flow
-app.get('/login', (req, res) => {
-  const clientId = process.env.CLIENT_ID;
-  const redirectUri = process.env.REDIRECT_URI;
+// app.get('/', (req, res) => {
+//   const clientId = process.env.CLIENT_ID;
+//   const redirectUri = process.env.REDIRECT_URI;
 
-  const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=read:packages,write:packages`;
+//   const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=read:packages,write:packages`;
 
-  res.redirect(githubAuthUrl);
-});
+//   res.redirect(githubAuthUrl);
+// });
 
 // GitHub OAuth callback
 // app.get('/github/callback', async (req, res) => {
@@ -64,7 +64,22 @@ app.get('/login', (req, res) => {
 //   }
 // });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
+// // Start server
+// app.listen(PORT, () => {
+//   console.log(`✅ Server running at http://localhost:${PORT}`);
+// });
+
+const express = require("express");
+const app = express();
+
+app.get('/', (req, res) => {
+  const clientId = process.env.CLIENT_ID;
+  const redirectUri = process.env.REDIRECT_URI;
+
+  const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=read:packages,write:packages`;
+
+  res.redirect(githubAuthUrl);
 });
+
+module.exports = app;
+
