@@ -29,40 +29,40 @@ app.get('/login', (req, res) => {
 });
 
 // GitHub OAuth callback
-app.get('/github/callback', async (req, res) => {
-  const code = req.query.code;
+// app.get('/github/callback', async (req, res) => {
+//   const code = req.query.code;
 
-  if (!code) return res.status(400).send('Missing code in callback');
+//   if (!code) return res.status(400).send('Missing code in callback');
 
-  try {
-    const response = await fetch('https://github.com/login/oauth/access_token', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        client_id: process.env.CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
-        code,
-      }),
-    });
+//   try {
+//     const response = await fetch('https://github.com/login/oauth/access_token', {
+//       method: 'POST',
+//       headers: {
+//         Accept: 'application/json',
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({
+//         client_id: process.env.CLIENT_ID,
+//         client_secret: process.env.CLIENT_SECRET,
+//         code,
+//       }),
+//     });
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    if (data.error) return res.status(400).json(data);
+//     if (data.error) return res.status(400).json(data);
 
-    res.json({
-      message: 'User access token retrieved successfully!',
-      access_token: data.access_token,
-      expires_in: data.expires_in,
-      refresh_token: data.refresh_token,
-    });
-  } catch (err) {
-    console.error('Error during GitHub callback:', err);
-    res.status(500).send('Server error');
-  }
-});
+//     res.json({
+//       message: 'User access token retrieved successfully!',
+//       access_token: data.access_token,
+//       expires_in: data.expires_in,
+//       refresh_token: data.refresh_token,
+//     });
+//   } catch (err) {
+//     console.error('Error during GitHub callback:', err);
+//     res.status(500).send('Server error');
+//   }
+// });
 
 // Start server
 app.listen(PORT, () => {
