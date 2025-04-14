@@ -1,5 +1,6 @@
 import express from 'express';
 import fetch from 'node-fetch';
+import qs from 'querystring';
 
 const app = express();
 
@@ -20,22 +21,27 @@ app.get('/github/callback', async (req, res) => {
   if (!code) return res.status(400).send('Missing code in callback');
 
   try {
+    // GitHub expects the data to be URL-encoded, not JSON
+    const body = qs.stringify({
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
+      code,
+    });
+
     const response = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded', // GitHub expects this content type
       },
-      body: JSON.stringify({
-        client_id: process.env.CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
-        code,
-      }),
+      body: body,
     });
 
     const data = await response.json();
 
-    if (data.error) return res.status(400).json(data);
+    if (data.error) {
+      return res.status(400).json(data);
+    }
 
     res.json({
       message: 'User access token retrieved successfully!',
