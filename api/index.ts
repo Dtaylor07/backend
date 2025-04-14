@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
 });
 
 // GitHub OAuth callback
-app.get("/github/callback", async (req, res) => {
+app.get("/", async (req, res) => {
   const code = req.query.code;
 
   if (!code) return res.status(400).send("Missing code in callback");
