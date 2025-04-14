@@ -2,12 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.ts",
+      "src": "api/index.mjs",
       "use": "@vercel/node"
     }
   ],
   "routes": [
-    { "src": "/login", "dest": "/api/index.ts" },
-    { "src": "/github/callback", "dest": "/api/index.ts" }
+    { "src": "/login", "dest": "/api/index.mjs" },
+    { "src": "/github/callback", "dest": "/api/index.mjs" }
   ]
 }
