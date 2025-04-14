@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const fetch = require("node-fetch");
 
 // Redirect to GitHub OAuth
 app.get("/", (req, res) => {
@@ -47,9 +48,4 @@ app.get("/github/callback", async (req, res) => {
   }
 });
 
-// module.exports = app;
-
-// Start server
-app.listen(PORT, () => {
-    console.log(`✅ Server running at http://localhost:${PORT}`);
-  });
+module.exports = app;
